@@ -1,0 +1,162 @@
+--[[ 
+    SURVIVE THE APOCALYPSE - RAINBOW ULTIMATE
+    LINK GET KEY: https://link4m.net/y3RwQ6Jb
+    KEY: hoangkhai_key2404
+]]
+
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local UICorner = Instance.new("UICorner")
+local UIStroke = Instance.new("UIStroke")
+local UIGradient = Instance.new("UIGradient")
+local Title = Instance.new("TextLabel")
+local KeyInput = Instance.new("TextBox")
+local CopyBtn = Instance.new("TextButton")
+local SubmitBtn = Instance.new("TextButton")
+
+-- Cấu hình ScreenGui
+ScreenGui.Parent = game.CoreGui
+ScreenGui.Name = "Apocalypse_Rainbow_Menu"
+ScreenGui.ResetOnSpawn = false
+
+-- Hàm tạo THÔNG BÁO CHỮ ĐỎ NHẸ RÕ NÉT (Giữa màn hình)
+local function NotifyRed(text)
+    local NotifyGui = Instance.new("ScreenGui")
+    NotifyGui.Parent = game.CoreGui
+    
+    local Label = Instance.new("TextLabel")
+    Label.Parent = NotifyGui
+    Label.Size = UDim2.new(0, 500, 0, 50)
+    Label.Position = UDim2.new(0.5, -250, 0.25, 0)
+    Label.BackgroundTransparency = 1
+    Label.TextColor3 = Color3.fromRGB(255, 120, 120) -- Màu đỏ nhẹ (Pastel Red)
+    Label.Text = text
+    Label.Font = Enum.Font.GothamBold
+    Label.TextSize = 24
+    Label.TextStrokeTransparency = 0.3
+    Label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    
+    task.spawn(function()
+        task.wait(3.5)
+        for i = 0, 1, 0.1 do
+            Label.TextTransparency = i
+            Label.TextStrokeTransparency = 0.3 + (i * 0.7)
+            task.wait(0.05)
+        end
+        NotifyGui:Destroy()
+    end)
+end
+
+-- Khung Menu Chính
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- Để màu trắng để Gradient hiện rõ
+MainFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
+MainFrame.Size = UDim2.new(0, 300, 0, 200)
+MainFrame.Active = true
+MainFrame.Draggable = true
+
+UICorner.CornerRadius = UDim.new(0, 15)
+UICorner.Parent = MainFrame
+
+-- Hiệu ứng Cầu vồng cho Phông nền (UIGradient)
+local RainbowGradient = Instance.new("UIGradient")
+RainbowGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)),
+    ColorSequenceKeypoint.new(0.2, Color3.fromRGB(255, 255, 0)),
+    ColorSequenceKeypoint.new(0.4, Color3.fromRGB(0, 255, 0)),
+    ColorSequenceKeypoint.new(0.6, Color3.fromRGB(0, 255, 255)),
+    ColorSequenceKeypoint.new(0.8, Color3.fromRGB(0, 0, 255)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 255))
+}
+RainbowGradient.Parent = MainFrame
+
+-- Viền Menu (UIStroke)
+UIStroke.Parent = MainFrame
+UIStroke.Thickness = 3
+UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+UIStroke.Color = Color3.fromRGB(255, 255, 255)
+
+-- Script làm cho hiệu ứng Cầu vồng xoay liên tục
+task.spawn(function()
+    local rot = 0
+    while true do
+        rot = rot + 1
+        RainbowGradient.Rotation = rot
+        if rot >= 360 then rot = 0 end
+        task.wait(0.02)
+    end
+end)
+
+-- Tiêu đề Menu
+Title.Parent = MainFrame
+Title.Text = "SURVIVE THE APOCALYPSE"
+Title.Font = Enum.Font.GothamBold
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 17
+Title.Size = UDim2.new(1, 0, 0, 50)
+Title.BackgroundTransparency = 1
+Title.TextStrokeTransparency = 0.5
+
+-- Ô nhập Key
+KeyInput.Parent = MainFrame
+KeyInput.PlaceholderText = "Nhập Key vào đây..."
+KeyInput.Text = ""
+KeyInput.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+KeyInput.BackgroundTransparency = 0.2
+KeyInput.Position = UDim2.new(0.1, 0, 0.35, 0)
+KeyInput.Size = UDim2.new(0.8, 0, 0, 35)
+KeyInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+KeyInput.Font = Enum.Font.GothamSemibold
+Instance.new("UICorner", KeyInput).CornerRadius = UDim.new(0, 8)
+
+-- Nút Sao chép Link
+CopyBtn.Parent = MainFrame
+CopyBtn.Text = "SAO CHÉP LINK GET KEY"
+CopyBtn.Font = Enum.Font.GothamBold
+CopyBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+CopyBtn.BackgroundTransparency = 0.5
+CopyBtn.TextColor3 = Color3.fromRGB(255, 120, 120) -- Màu đỏ nhẹ
+CopyBtn.Position = UDim2.new(0.1, 0, 0.58, 5)
+CopyBtn.Size = UDim2.new(0.8, 0, 0, 25)
+Instance.new("UICorner", CopyBtn).CornerRadius = UDim.new(0, 5)
+
+-- Nút Kích hoạt Script
+SubmitBtn.Parent = MainFrame
+SubmitBtn.Text = "XÁC NHẬN KEY"
+SubmitBtn.Font = Enum.Font.GothamBold
+SubmitBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+SubmitBtn.BackgroundTransparency = 0.2
+SubmitBtn.TextColor3 = Color3.fromRGB(0, 0, 0)
+SubmitBtn.Position = UDim2.new(0.1, 0, 0.78, 10)
+SubmitBtn.Size = UDim2.new(0.8, 0, 0, 35)
+Instance.new("UICorner", SubmitBtn).CornerRadius = UDim.new(0, 10)
+
+--- XỬ LÝ ---
+
+CopyBtn.MouseButton1Click:Connect(function()
+    setclipboard("https://link4m.net/y3RwQ6Jb")
+    CopyBtn.Text = "ĐÃ SAO CHÉP!"
+    NotifyRed("Dán lên trình duyệt để getkey")
+    task.wait(2)
+    CopyBtn.Text = "SAO CHÉP LINK GET KEY"
+end)
+
+SubmitBtn.MouseButton1Click:Connect(function()
+    if KeyInput.Text == "hoangkhai_key2404" then
+        SubmitBtn.Text = "XÁC MINH THÀNH CÔNG!"
+        SubmitBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+        task.wait(1)
+        ScreenGui:Destroy()
+        -- Load script Survive The Apocalypse tổng hợp
+        loadstring(game:HttpGet("https://gist.githubusercontent.com/kiethubX/6ffa8d343ef8f46a97c459a960940f21/raw/19001ba21b207445eb77e373bdad5128b1b18ca6/gistfile1.txt"))()
+    else
+        SubmitBtn.Text = "SAI KEY! KIỂM TRA LẠI"
+        SubmitBtn.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+        SubmitBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        task.wait(2)
+        SubmitBtn.Text = "XÁC NHẬN KEY"
+        SubmitBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        SubmitBtn.TextColor3 = Color3.fromRGB(0, 0, 0)
+    end
+end)

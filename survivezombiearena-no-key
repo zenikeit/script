@@ -1,0 +1,159 @@
+--[[ 
+    SURVIVE ZOMBIE ARENA - SOFT RAINBOW EDITION
+    LINK GET KEY: https://link4m.net/nVnThb
+    KEY: Ronnei.htk_script0118275
+]]
+
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local UICorner = Instance.new("UICorner")
+local UIStroke = Instance.new("UIStroke")
+local UIGradient = Instance.new("UIGradient")
+local Title = Instance.new("TextLabel")
+local KeyInput = Instance.new("TextBox")
+local CopyBtn = Instance.new("TextButton")
+local SubmitBtn = Instance.new("TextButton")
+
+-- Cấu hình ScreenGui
+ScreenGui.Parent = game.CoreGui
+ScreenGui.Name = "ZombieArena_SoftRainbow"
+ScreenGui.ResetOnSpawn = false
+
+-- Hàm tạo THÔNG BÁO CHỮ ĐỎ NHẸ RÕ NÉT
+local function NotifyRed(text)
+    local NotifyGui = Instance.new("ScreenGui")
+    NotifyGui.Parent = game.CoreGui
+    
+    local Label = Instance.new("TextLabel")
+    Label.Parent = NotifyGui
+    Label.Size = UDim2.new(0, 500, 0, 50)
+    Label.Position = UDim2.new(0.5, -250, 0.2, 0)
+    Label.BackgroundTransparency = 1
+    Label.TextColor3 = Color3.fromRGB(255, 120, 120) -- Màu đỏ nhẹ (Pastel)
+    Label.Text = text
+    Label.Font = Enum.Font.GothamBold
+    Label.TextSize = 24
+    Label.TextStrokeTransparency = 0.4
+    Label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    
+    task.spawn(function()
+        task.wait(3.5)
+        for i = 0, 1, 0.1 do
+            Label.TextTransparency = i
+            Label.TextStrokeTransparency = 0.4 + (i * 0.6)
+            task.wait(0.05)
+        end
+        NotifyGui:Destroy()
+    end)
+end
+
+-- Khung Menu Chính
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- Để trắng để Gradient hiện màu đẹp hơn
+MainFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
+MainFrame.Size = UDim2.new(0, 300, 0, 200)
+MainFrame.Active = true
+MainFrame.Draggable = true
+
+UICorner.CornerRadius = UDim.new(0, 15)
+UICorner.Parent = MainFrame
+
+-- Hiệu ứng Cầu vồng nhạt cho Phông nền
+UIGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 180, 180)), -- Đỏ nhạt
+    ColorSequenceKeypoint.new(0.2, Color3.fromRGB(255, 255, 180)), -- Vàng nhạt
+    ColorSequenceKeypoint.new(0.4, Color3.fromRGB(180, 255, 180)), -- Xanh lá nhạt
+    ColorSequenceKeypoint.new(0.6, Color3.fromRGB(180, 255, 255)), -- Xanh dương nhạt
+    ColorSequenceKeypoint.new(0.8, Color3.fromRGB(180, 180, 255)), -- Tím nhạt
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 180, 255))   -- Hồng nhạt
+}
+UIGradient.Parent = MainFrame
+
+-- Viền Menu
+UIStroke.Parent = MainFrame
+UIStroke.Thickness = 3
+UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+UIStroke.Color = Color3.fromRGB(255, 255, 255)
+
+-- Script làm cho hiệu ứng Cầu vồng xoay liên tục mượt mà
+task.spawn(function()
+    local rot = 0
+    while true do
+        rot = rot + 0.8
+        UIGradient.Rotation = rot
+        if rot >= 360 then rot = 0 end
+        task.wait(0.02)
+    end
+end)
+
+-- Tiêu đề Menu
+Title.Parent = MainFrame
+Title.Text = "SURVIVE ZOMBIE ARENA"
+Title.Font = Enum.Font.GothamBold
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 18
+Title.Size = UDim2.new(1, 0, 0, 50)
+Title.BackgroundTransparency = 1
+Title.TextStrokeTransparency = 0.5
+
+-- Ô nhập Key
+KeyInput.Parent = MainFrame
+KeyInput.PlaceholderText = "Nhập Key tại đây..."
+KeyInput.Text = ""
+KeyInput.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+KeyInput.BackgroundTransparency = 0.4
+KeyInput.Position = UDim2.new(0.1, 0, 0.35, 0)
+KeyInput.Size = UDim2.new(0.8, 0, 0, 35)
+KeyInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+KeyInput.Font = Enum.Font.GothamSemibold
+Instance.new("UICorner", KeyInput).CornerRadius = UDim.new(0, 8)
+
+-- Nút Sao chép Link
+CopyBtn.Parent = MainFrame
+CopyBtn.Text = "SAO CHÉP LINK GET KEY"
+CopyBtn.Font = Enum.Font.GothamBold
+CopyBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+CopyBtn.BackgroundTransparency = 0.6
+CopyBtn.TextColor3 = Color3.fromRGB(255, 140, 140) -- Màu đỏ nhẹ
+CopyBtn.Position = UDim2.new(0.1, 0, 0.58, 5)
+CopyBtn.Size = UDim2.new(0.8, 0, 0, 25)
+Instance.new("UICorner", CopyBtn).CornerRadius = UDim.new(0, 5)
+
+-- Nút Xác nhận Key
+SubmitBtn.Parent = MainFrame
+SubmitBtn.Text = "XÁC NHẬN KEY"
+SubmitBtn.Font = Enum.Font.GothamBold
+SubmitBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+SubmitBtn.BackgroundTransparency = 0.3
+SubmitBtn.TextColor3 = Color3.fromRGB(0, 0, 0)
+SubmitBtn.Position = UDim2.new(0.1, 0, 0.78, 10)
+SubmitBtn.Size = UDim2.new(0.8, 0, 0, 35)
+Instance.new("UICorner", SubmitBtn).CornerRadius = UDim.new(0, 10)
+
+--- XỬ LÝ SỰ KIỆN ---
+
+CopyBtn.MouseButton1Click:Connect(function()
+    setclipboard("https://link4m.net/nVnThb")
+    CopyBtn.Text = "ĐÃ SAO CHÉP!"
+    NotifyRed("Dán lên trình duyệt để getkey")
+    task.wait(2)
+    CopyBtn.Text = "SAO CHÉP LINK GET KEY"
+end)
+
+SubmitBtn.MouseButton1Click:Connect(function()
+    if KeyInput.Text == "Ronnei.htk_script0118275" then
+        SubmitBtn.Text = "XÁC MINH THÀNH CÔNG!"
+        SubmitBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 150)
+        task.wait(1)
+        ScreenGui:Destroy()
+        -- Khởi chạy script Zombie Arena
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/gumanba/Scripts/main/SurviveZombieArena"))()
+    else
+        SubmitBtn.Text = "SAI KEY! NHẬP LẠI"
+        SubmitBtn.BackgroundColor3 = Color3.fromRGB(255, 100, 100)
+        task.wait(2)
+        SubmitBtn.Text = "XÁC NHẬN KEY"
+        SubmitBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    end
+end)

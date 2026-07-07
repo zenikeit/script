@@ -1,5 +1,5 @@
 --[[ 
-    HỆ THỐNG GETKEY UB HUB - ROG GAMING EDITION (HEX ENCRYPTED V2)
+    HỆ THỐNG GETKEY UB HUB - FIX LỖI KHÔNG LOAD SCRIPT (HEX SECURE)
     LINK GET KEY: https://link4m.net/9XprL
 ]]
 
@@ -18,7 +18,7 @@ ScreenGui.Parent = game.CoreGui
 ScreenGui.Name = "UBHub_GamingGetKey_System"
 ScreenGui.ResetOnSpawn = false
 
--- Hàm giải mã Hex an toàn (Chống đọc trộm và bảo mật chuỗi)
+-- Hàm giải mã Hex an toàn
 local function _hexDecode(hexStr)
     local str = ""
     for i = 1, #hexStr, 2 do
@@ -29,17 +29,18 @@ local function _hexDecode(hexStr)
 end
 
 -- ========================================================
--- DỮ LIỆU ĐÃ ĐƯỢC MÃ HÓA HEX BẢO MẬT TUYỆT ĐỐI (ANTI-BYPASS)
+-- DỮ LIỆU ĐÃ ĐƯỢC SỬA LẠI CHUẨN XÁC VÀ MÃ HÓA BẢO MẬT
 -- ========================================================
 
--- Link Get Key mã hóa Hex: https://link4m.net/9XprL
+-- Link Get Key: https://link4m.net/9XprL
 local _encryptedLink = "68747470733a2f2f6c696e6b346d2e6e65742f395870724c"
 
--- Key mã hóa Hex: UBHUBGAG2FREE_qyE3nvt92tdm67HSxyjUB
+-- Key: UBHUBGAG2FREE_qyE3nvt92tdm67HSxyjUB
 local _encryptedKey = "554248554247414732465245455f717945336e7674393274646d3637485378796a5542"
 
--- Script gốc mã hóa Hex: https://raw.githubusercontent.com/TeamUBHub/UBLoader/refs/heads/main/index/Key.lua
-local _encryptedScript = "68747470733a2f2f7261772e67697468756275736572636f6e76656e742e636f6d2f5465616d55424875622f55424c6f616465722f726566732f68656164732f6d61696e2f696e6465782f4b65792e6c7561"
+-- ĐÃ FIX: Link script gốc chính xác không bị sai ký tự domain github
+-- https://raw.githubusercontent.com/TeamUBHub/UBLoader/refs/heads/main/index/Key.lua
+local _encryptedScript = "68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f5465616d55424875622f55424c6f616465722f726566732f68656164732f6d61696e2f696e6465782f4b65792e6c7561"
 
 -- ========================================================
 
@@ -154,14 +155,13 @@ CopyBtnPermanent.MouseButton1Click:Connect(function()
 end)
 
 SubmitBtn.MouseButton1Click:Connect(function()
-    -- Giải mã chuỗi Hex trực tiếp lúc so sánh để xác thực chuẩn xác 100%
     if KeyInput.Text == _hexDecode(_encryptedKey) then
         SubmitBtn.Text = "KÍCH HOẠT THÀNH CÔNG!"
         SubmitBtn.BackgroundColor3 = Color3.fromRGB(0, 215, 115)
         SubmitBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
         task.wait(1.2)
         ScreenGui:Destroy()
-        -- Tải và chạy script gốc sau khi vượt qua hệ thống kiểm tra Key
+        -- Thực thi chạy chính xác script gốc của UB Hub
         loadstring(game:HttpGet(_hexDecode(_encryptedScript)))()
     else
         SubmitBtn.Text = "SAI KEY! VUI LÒNG KIỂM TRA LẠI"

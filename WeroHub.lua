@@ -1,103 +1,231 @@
--- Khởi tạo Giao diện dưới CoreGui
-local sg = Instance.new("ScreenGui")
-sg.Name = "RonneiPremiumNotif"
-sg.Parent = game:GetService("CoreGui")
+-- [[ HỆ THỐNG GETKEY WERO HUB - RAINBOW NEON ]] --
 
--- Bảng nền chính (Chuyển sắc Neon)
-local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 320, 0, 140) -- Chiều cao vừa vặn cho cả note
-frame.Position = UDim2.new(0.5, -160, 0.5, -70) -- Căn giữa màn hình hoàn hảo
-frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-frame.BorderSizePixel = 0
-frame.ClipsDescendants = true
-frame.Parent = sg
+local CoreGui = game:GetService("CoreGui")
+local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
 
--- Hiệu ứng Bo góc
-local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(0, 12)
-corner.Parent = frame
+local parentUI = nil
+local success, err = pcall(function()
+    parentUI = CoreGui
+end)
+if not success or not parentUI then
+    parentUI = LocalPlayer:WaitForChild("PlayerGui")
+end
 
--- Tạo màu nền Gradient huyền bí
-local uigradient = Instance.new("UIGradient")
-uigradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(15, 12, 41)),    -- Xanh đen
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(48, 43, 99)),  -- Tím sẫm
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(36, 36, 62))     -- Tím xanh
-})
-uigradient.Parent = frame
+-- Xóa UI cũ nếu đang chạy
+if parentUI:FindFirstChild("WeroHub_GetKey_System") then
+    parentUI["WeroHub_GetKey_System"]:Destroy()
+end
 
--- Đường viền phát sáng (Neon Border)
-local stroke = Instance.new("UIStroke")
-stroke.Thickness = 2.5
-stroke.Color = Color3.fromRGB(255, 0, 128) -- Hồng Neon mặc định
-stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-stroke.Parent = frame
+-- Hàm giải mã Hex bảo mật
+local function decode(hex)
+    local str = ""
+    for i = 1, #hex, 2 do
+        str = str .. string.char(tonumber(string.sub(hex, i, i+1), 16))
+    end
+    return str
+end
 
--- Chữ TIKTOK:ronnei7.htk (Đậm và sắc nét)
-local label = Instance.new("TextLabel")
-label.Size = UDim2.new(1, 0, 0.4, 0)
-label.Position = UDim2.new(0, 0, 0.1, 0)
-label.BackgroundTransparency = 1
-label.Text = "TIKTOK: ronnei7.htk"
-label.TextColor3 = Color3.fromRGB(0, 255, 255) -- Xanh Cyan rực rỡ
-label.Font = Enum.Font.GothamBold
-label.TextSize = 22
-label.TextStrokeTransparency = 0.5
-label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-label.Parent = frame
+-- Dữ liệu bảo mật (Đã mã hóa Hex)
+local enc_key = "5765726f4875622d37373935354230394636354738353531" -- Key: WeroHub-77955B09F65G8551
+local enc_link = "68747470733a2f2f6c696e6b346d2e6e65742f503266443472" -- Link: https://link4m.net/P2fD4r
+local enc_script = "68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f4c696c7765726f32302f5765726f4875622d536372697074732f726566732f68656164732f6d61696e2f496e7374616e7457696e73" -- Script URL
 
--- Note nhỏ bên dưới
-local noteLabel = Instance.new("TextLabel")
-noteLabel.Size = UDim2.new(1, 0, 0.2, 0)
-noteLabel.Position = UDim2.new(0, 0, 0.48, 0)
-noteLabel.BackgroundTransparency = 1
-noteLabel.Text = "follow đi ko t ✂️ 🐦"
-noteLabel.TextColor3 = Color3.fromRGB(255, 85, 85) -- Màu đỏ cảnh báo
-noteLabel.Font = Enum.Font.GothamMedium
-noteLabel.TextSize = 14
-noteLabel.TextStrokeTransparency = 0.8
-noteLabel.Parent = frame
+-- Tạo ScreenGui
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "WeroHub_GetKey_System"
+ScreenGui.Parent = parentUI
+ScreenGui.ResetOnSpawn = false
 
--- Dòng trạng thái & Đếm ngược
-local timerLabel = Instance.new("TextLabel")
-timerLabel.Size = UDim2.new(1, 0, 0.2, 0)
-timerLabel.Position = UDim2.new(0, 0, 0.72, 0)
-timerLabel.BackgroundTransparency = 1
-timerLabel.Text = "Khởi chạy sau 5 giây..."
-timerLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-timerLabel.Font = Enum.Font.Gotham
-timerLabel.TextSize = 12
-timerLabel.Parent = frame
+-- Thông báo nổi (Notification) Cyan Neon rõ nét
+local function showNotify(text)
+    local NotifyGui = Instance.new("ScreenGui")
+    NotifyGui.Name = "WeroNotify"
+    NotifyGui.Parent = parentUI
+    
+    local Label = Instance.new("TextLabel")
+    Label.Parent = NotifyGui
+    Label.Size = UDim2.new(0, 400, 0, 50)
+    Label.Position = UDim2.new(0.5, -200, 0.18, 0)
+    Label.BackgroundTransparency = 1
+    Label.TextColor3 = Color3.fromRGB(0, 240, 255)
+    Label.Text = text
+    Label.Font = Enum.Font.GothamBold
+    Label.TextSize = 18
+    Label.TextStrokeTransparency = 0.2
+    Label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    
+    task.spawn(function()
+        task.wait(3.5)
+        NotifyGui:Destroy()
+    end)
+end
 
--- Hiệu ứng đổi màu RGB cho viền (Chạy song song)
-local spawn = task.spawn(function()
-    local counter = 0
-    while sg.Parent do
-        counter = counter + 0.01
-        stroke.Color = Color3.fromHSV(counter % 1, 1, 1) -- Đổi màu cầu vồng liên tục
-        task.wait(0.01)
+-- Khung Menu chính (#0B0813 - Tím đen cực tối)
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromHex("#0B0813")
+MainFrame.Position = UDim2.new(0.5, -180, 0.5, -155)
+MainFrame.Size = UDim2.new(0, 360, 0, 310)
+MainFrame.Active = true
+MainFrame.Draggable = true
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 10)
+UICorner.Parent = MainFrame
+
+-- Khung viền cầu vồng nháy màu (Rainbow Stroke)
+local UIStroke = Instance.new("UIStroke")
+UIStroke.Thickness = 2
+UIStroke.Transparency = 0
+UIStroke.Parent = MainFrame
+
+task.spawn(function()
+    local hue = 0
+    while task.wait(0.03) do
+        hue = (hue + 0.01) % 1
+        UIStroke.Color = Color3.fromHSV(hue, 0.8, 1)
     end
 end)
 
--- Vòng lặp đếm ngược 5 giây chuẩn xác
-for i = 5, 1, -1 do
-    timerLabel.Text = "🔥 Khởi chạy sau " .. i .. " giây..."
-    task.wait(1)
-end
+-- Tiêu đề Menu
+local Title = Instance.new("TextLabel")
+Title.Parent = MainFrame
+Title.Text = "Hệ Thống GetKey Wero Hub"
+Title.Font = Enum.Font.GothamBold
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 16
+Title.Size = UDim2.new(1, 0, 0, 42)
+Title.BackgroundTransparency = 1
 
--- Hiệu ứng biến mất mượt mà (Fade out)
-timerLabel.Text = "Đang tải Script..."
-for opacity = 0, 1, 0.1 do
-    frame.BackgroundTransparency = opacity
-    label.TextTransparency = opacity
-    noteLabel.TextTransparency = opacity
-    timerLabel.TextTransparency = opacity
-    stroke.Transparency = opacity
-    task.wait(0.03)
-end
+-- Ô nhập Key (#161224 - Tím xám)
+local KeyInput = Instance.new("TextBox")
+KeyInput.Parent = MainFrame
+KeyInput.PlaceholderText = "Nhập key tại đây..."
+KeyInput.Text = ""
+KeyInput.BackgroundColor3 = Color3.fromHex("#161224")
+KeyInput.Position = UDim2.new(0.08, 0, 0.16, 0)
+KeyInput.Size = UDim2.new(0.84, 0, 0, 36)
+KeyInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+KeyInput.Font = Enum.Font.GothamSemibold
+KeyInput.TextSize = 13
 
--- Dọn dẹp UI
-sg:Destroy()
+local InputCorner = Instance.new("UICorner")
+InputCorner.CornerRadius = UDim.new(0, 6)
+InputCorner.Parent = KeyInput
 
--- Khởi chạy Script WeroHub InstantWins mới của bạn
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Lilwero20/WeroHub-Scripts/refs/heads/main/InstantWins"))()
+local InputStroke = Instance.new("UIStroke")
+InputStroke.Thickness = 1
+InputStroke.Color = Color3.fromHex("#2F264A")
+InputStroke.Parent = KeyInput
+
+-- Nút GET KEY (#00F0FF - Cyan Neon, chữ đen)
+local GetKeyBtn = Instance.new("TextButton")
+GetKeyBtn.Parent = MainFrame
+GetKeyBtn.Text = ""
+GetKeyBtn.BackgroundColor3 = Color3.fromHex("#00F0FF")
+GetKeyBtn.Position = UDim2.new(0.08, 0, 0.30, 5)
+GetKeyBtn.Size = UDim2.new(0.84, 0, 0, 38)
+
+local BtnCorner = Instance.new("UICorner")
+BtnCorner.CornerRadius = UDim.new(0, 6)
+BtnCorner.Parent = GetKeyBtn
+
+-- Dòng chính
+local MainBtnText = Instance.new("TextLabel")
+MainBtnText.Name = "MainText"
+MainBtnText.Parent = GetKeyBtn
+MainBtnText.Size = UDim2.new(1, 0, 0.55, 0)
+MainBtnText.Position = UDim2.new(0, 0, 0.05, 0)
+MainBtnText.BackgroundTransparency = 1
+MainBtnText.Text = "GetKey Vĩnh Viễn ∞"
+MainBtnText.Font = Enum.Font.GothamBold
+MainBtnText.TextSize = 13
+MainBtnText.TextColor3 = Color3.fromRGB(0, 0, 0)
+
+-- Dòng chữ phụ
+local SubBtnText = Instance.new("TextLabel")
+SubBtnText.Name = "SubText"
+SubBtnText.Parent = GetKeyBtn
+SubBtnText.Size = UDim2.new(1, 0, 0.4, 0)
+SubBtnText.Position = UDim2.new(0, 0, 0.55, 0)
+SubBtnText.BackgroundTransparency = 1
+SubBtnText.Text = "(Link4m 1 lần)"
+SubBtnText.Font = Enum.Font.GothamBold
+SubBtnText.TextSize = 10
+SubBtnText.TextColor3 = Color3.fromRGB(30, 30, 30)
+
+-- Nút XÁC NHẬN KEY
+local SubmitBtn = Instance.new("TextButton")
+SubmitBtn.Parent = MainFrame
+SubmitBtn.Text = "XÁC NHẬN KEY"
+SubmitBtn.Font = Enum.Font.GothamBold
+SubmitBtn.TextSize = 13
+SubmitBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+SubmitBtn.TextColor3 = Color3.fromHex("#0B0813")
+SubmitBtn.Position = UDim2.new(0.08, 0, 0.46, 10)
+SubmitBtn.Size = UDim2.new(0.84, 0, 0, 36)
+
+local SubmitCorner = Instance.new("UICorner")
+SubmitCorner.CornerRadius = UDim.new(0, 6)
+SubmitCorner.Parent = SubmitBtn
+
+-- Chữ Note nhỏ ở dưới (Màu vàng đỏ nhẹ)
+local NoteLabel = Instance.new("TextLabel")
+NoteLabel.Parent = MainFrame
+NoteLabel.Text = "script chỉ nokey trong 2 tiếng từ khi video được đăng lên đã quá 2 tiếng kể từ khi video được đăng lên nên mình xin phép được thêm key vào nhé\nViệc lấy Key Chỉ mất 1-2 phút mong bạn đừng tức giận và tiếp tục ủng hộ mình nhé! Chúc các bạn chơi game vui vẻ!"
+NoteLabel.Font = Enum.Font.GothamMedium
+NoteLabel.TextColor3 = Color3.fromHex("#E08B46")
+NoteLabel.Position = UDim2.new(0.05, 0, 0.65, 5)
+NoteLabel.Size = UDim2.new(0.9, 0, 0, 95)
+NoteLabel.BackgroundTransparency = 1
+NoteLabel.TextWrapped = true
+NoteLabel.TextYAlignment = Enum.TextYAlignment.Top
+NoteLabel.TextSize = 9.5
+
+-- Logic nút GET KEY
+GetKeyBtn.MouseButton1Click:Connect(function()
+    MainBtnText.Text = "ĐÃ SAO CHÉP LINK!"
+    SubBtnText.Text = "Hãy dán vào trình duyệt"
+    
+    setclipboard(decode(enc_link))
+    showNotify("dán lên trình duyệt để getkey")
+    
+    task.wait(2)
+    MainBtnText.Text = "GetKey Vĩnh Viễn ∞"
+    SubBtnText.Text = "(Link4m 1 lần)"
+end)
+
+-- Logic xác nhận Key và nạp Script Wero Hub
+SubmitBtn.MouseButton1Click:Connect(function()
+    local input = KeyInput.Text
+    local correctKey = decode(enc_key)
+    
+    if input == correctKey then
+        SubmitBtn.Text = "KÍCH HOẠT THÀNH CÔNG!"
+        SubmitBtn.BackgroundColor3 = Color3.fromRGB(46, 204, 113)
+        SubmitBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        
+        task.wait(1)
+        ScreenGui:Destroy()
+        
+        local scriptUrl = decode(enc_script)
+        local success, runErr = pcall(function()
+            loadstring(game:HttpGet(scriptUrl))()
+        end)
+        if not success then
+            warn("Lỗi khi tải script chính: " .. tostring(runErr))
+        end
+    else
+        SubmitBtn.Text = "SAI KEY! VUI LÒNG THỬ LẠI"
+        SubmitBtn.BackgroundColor3 = Color3.fromRGB(231, 76, 60)
+        SubmitBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        
+        task.wait(2)
+        SubmitBtn.Text = "XÁC NHẬN KEY"
+        SubmitBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        SubmitBtn.TextColor3 = Color3.fromHex("#0B0813")
+    end
+end)
